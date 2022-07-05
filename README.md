@@ -16,15 +16,15 @@ SQS Client
 For starting use SQS Client we need to create a connection to the server like this. Create an instance of SQS and use 2 methods - 
 setConnectionProperties() connect().
 
-$connection = new SQS;
-$connection->setConnectionProperties(array $properties);
+$connection = SQS::obj();
+$connection->declareConnection(array $properties, \Memcrab\Log\Log $ErrorHandler);
 $connection->connect();
 
 
-Method setConnectionProperties(array $properties) - you must get region, credentials from your profile ($key and $secret), version,  
+Method declareConnection(array $properties, \Memcrab\Log\Log $ErrorHandler) - you must get region, credentials from your profile ($key and $secret), version in first argument and Log::obj() in second,  
 for example:
 
-$connection->setConnectionProperties(['region' => 'us-west-2', 'key' => 'your_aws_access_key_id', 'secret' => 'your_aws_secret_access_key', 'version' => '2022-11-05']);
+$connection->setConnectionProperties(['region' => 'us-west-2', 'key' => 'your_aws_access_key_id', 'secret' => 'your_aws_secret_access_key', 'version' => '2022-11-05'], Log::obj());
 
 
 Next we must declare a queue:
@@ -52,7 +52,7 @@ $connection->changeMessageVisibility('queue_name', ['messages'], 10), where 10 -
 
 To check connection:
 
-$connection->connectionStatus();
+$connection->ping();
 
 To get list of all queues:
 
@@ -94,17 +94,16 @@ RabbitMQ Client
 ---------------
 
 For starting use RabbitMQ Client we need to create a connection to the server like this. Create an instance of RMQ and use 2 methods - 
-setConnectionProperties() and connect().
+declareConnection() and connect().
 
-$connection = new RMQ;
-$connection->setConnectionProperties(array $properties);
+$connection = RMQ::obj();
+$connection->declareConnection(array $properties, \Memcrab\Log\Log $ErrorHandler);
 $connection->connect();
 
 
-Method setConnectionProperties(array $properties) - you must get hostname, port, username and password, 
-for example:
+Method declareConnection(array $properties, \Memcrab\Log\Log $ErrorHandler) - you must get hostname, port, username and password in first argument and Log::obj() in second, for example:
 
-$connection->setConnectionProperties(['host' => 'localhost', 'port' => '5672', 'username' => 'guest', 'password' => 'guest']);
+$connection->declareConnection(['host' => 'localhost', 'port' => 5672, 'username' => 'guest', 'password' => 'guest'], Log::obj());
 
 Next the library will create a channel and we must declare a queue:
 
@@ -137,7 +136,7 @@ $connection->registerExchange('exchange_name', 'direct', true, true, false);
 
 To check connection:
 
-$connection->connectionStatus();
+$connection->ping();
 
 
 To send message:
